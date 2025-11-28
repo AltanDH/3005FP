@@ -13,7 +13,7 @@ Prerequisites:
 - Java 17 installed (will likely work with higher versions assuming backwards compatibility)
 - Maven installed
 - PostgreSQL
-- Database exists (Mine is called: 3005A3), and is defined by you in SimpleDatabaseHandler.Java file
+- Database exists (Mine is called: 3005FP), and is defined by you in SimpleDatabaseHandler.Java file
 - PostgreSQL username and password is defined by you in SimpleDatabaseHandler.Java file
 
 Steps to Run:
@@ -25,7 +25,7 @@ Steps to Run:
 6. Run the SimpleDatabaseHandler.Java file
 
 Assumptions:
-- 
+- Each group fitness class has 1 trainer
 
 -- Summary --
 This is a health and fitness management system with a relational database (postgreSQL) to manage the daily activities of a modern fitness center with persistent storage in Java. It offers individual and group training classes, with appropriate scheduling, capacity management, and trainer coordination. There are 3 different types of users: Members, trainers, and administrative staff, each with specialized access priviledges and functional responsibilities.
@@ -71,6 +71,7 @@ pom.xml:
 
 
 Video Link: 
+
 
 
 
