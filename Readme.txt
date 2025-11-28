@@ -1,5 +1,6 @@
 ## Health and Fitness Club Management System ##
 
+-- Introduction --
 Group Members: 
 Altan Dogan Hoca, 101311866
 Teddy Al Houwayek, 101316419
@@ -23,6 +24,8 @@ Steps to Run:
 5. Place the pom.xml file in the root
 6. Run the SimpleDatabaseHandler.Java file
 
+Assumptions:
+- 
 
 -- Summary --
 This is a health and fitness management system with a relational database (postgreSQL) to manage the daily activities of a modern fitness center with persistent storage in Java. It offers individual and group training classes, with appropriate scheduling, capacity management, and trainer coordination. There are 3 different types of users: Members, trainers, and administrative staff, each with specialized access priviledges and functional responsibilities.
@@ -68,6 +71,7 @@ pom.xml:
 
 
 Video Link: 
+
 
 
 
