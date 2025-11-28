@@ -8,7 +8,7 @@ It offers individual and group training classes, with appropriate scheduling, ca
 There are 3 different types of users: Members, trainers, and administrative staff, each with specialized access priviledges and functional responsibilities.
 
 Members:
-Members can access and their training history, fitness goals with their respective progress, and joining/leaving personal or group training sessions.
+Members can access and their training history, fitness goals with their respective progress, and joining/leaving group training sessions.
 
 Trainers:
 Trainers can define their work schedules, availability periods as either weekly recurring timeslots or individual time intervals, and update/view these as needed ahead of time. 
@@ -45,6 +45,7 @@ ER Model:
 
 
 Video Link: 
+
 
 
 
