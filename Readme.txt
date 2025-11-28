@@ -4,8 +4,8 @@ Name (SID): Teddy Al Houwayek (101316419)
 -- Summary --
 This is a health and fitness management system with a relational database (postgreSQL) to manage the daily activities of a modern fitness center with persistent storage in Java. 
 It offers individual and group training classes, with appropriate scheduling, capacity management, and trainer coordination.
-
 There are 3 different types of users: Members, trainers, and administrative staff, each with specialized access priviledges and functional responsibilities.
+
 Members:
 Members can access and their training history, fitness goals with their respective progress, and joining/leaving personal or group training sessions.
 
@@ -44,3 +44,4 @@ ER Model:
 
 
 Video Link: 
+
