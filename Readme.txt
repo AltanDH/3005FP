@@ -25,7 +25,8 @@ Steps to Run:
 6. Run the SimpleDatabaseHandler.Java file
 
 Assumptions:
-- Each group fitness class is limited to 1 trainer teaching it.
+- Each group fitness class is limited to 1 trainer teaching it
+- We assume the admin is held responsible for booking classes based on a trainer's availability, and as such their email is stored in the relation
 
 -- Summary --
 This is a health and fitness management system with a relational database (postgreSQL) to manage the daily activities of a modern fitness center with persistent storage in Java. It offers individual and group training classes, with appropriate scheduling, capacity management, and trainer coordination. There are 3 different types of users: Members, trainers, and administrative staff, each with specialized access priviledges and functional responsibilities.
@@ -71,6 +72,7 @@ pom.xml:
 
 
 Video Link: 
+
 
 
 
