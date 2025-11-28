@@ -1,5 +1,25 @@
-Name (SID): Altan Dogan Hoca (101311866)
-Name (SID): Teddy Al Houwayek (101316419)
+Group Members: 
+Altan Dogan Hoca, 101311866
+Teddy Al Houwayek, 101316419
+
+Documentation:
+- Postgres documentation for JDBC: https://jdbc.postgresql.org/documentation/setup/
+- Maven: https://mvnrepository.com/artifact/org.postgresql/postgresql/42.7.7
+
+Prerequisites:
+- Java 17 installed (will likely work with higher versions assuming backwards compatibility)
+- Maven installed
+- PostgreSQL
+- Database exists (Mine is called: 3005A3), and is defined by you in SimpleDatabaseHandler.Java file
+- PostgreSQL username and password is defined by you in SimpleDatabaseHandler.Java file
+
+Steps to Run:
+1. Create a database in Postgres using pgAdmin4
+2. Run the database with the dml.sql file provided in pgAdmin4
+3. Create a project in IntelliJ Community Edition with Maven selected (otherwise you're on your own)
+4. Go into SimpleDatabaseHandler.Java and set your database name, username, and password (pgAdmin4 data)
+5. Place the pom.xml file in the root
+6. Run the SimpleDatabaseHandler.Java file
 
 
 -- Summary --
@@ -22,14 +42,6 @@ Admins also manage class scheduling, including creating classes, assigning train
 They maintain the billing system by generating invoices for memberships, training sessions, and class enrollments, recording payment details, and tracking financial status.
 
 
--- How to Run --
-1.
-2.
-3.
-4.
-5.
-
-
 -- Application Operations --
 Member Functions: (5)
 - User Registration: Create a new member with unique email and basic profile info.
@@ -50,9 +62,18 @@ Administrative Staff Functions: (2)
 
 -- Files -- 
 ER Model:
+-
+
+dml.sql:
+- Rebuilds and displays the table with base tuples each time you run the file in a PostgreSQL database in pgAdmin4
+
+pom.xml:
+- File which uses Maven to help setup JDBC
+- Specifies project dependencies which Maven automatically downloads
 
 
 Video Link: 
+
 
 
 
