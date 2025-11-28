@@ -1,3 +1,5 @@
+## Health and Fitness Management System ##
+
 Group Members: 
 Altan Dogan Hoca, 101311866
 Teddy Al Houwayek, 101316419
@@ -73,6 +75,7 @@ pom.xml:
 
 
 Video Link: 
+
 
 
 
