@@ -1,4 +1,4 @@
-## Health and Fitness Management System ##
+## Health and Fitness Club Management System ##
 
 Group Members: 
 Altan Dogan Hoca, 101311866
@@ -68,6 +68,7 @@ pom.xml:
 
 
 Video Link: 
+
 
 
 
