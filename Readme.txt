@@ -22,6 +22,14 @@ Admins also manage class scheduling, including creating classes, assigning train
 They maintain the billing system by generating invoices for memberships, training sessions, and class enrollments, recording payment details, and tracking financial status.
 
 
+-- How to Run --
+1.
+2.
+3.
+4.
+5.
+
+
 -- Application Operations --
 Member Functions: (5)
 - User Registration: Create a new member with unique email and basic profile info.
@@ -45,6 +53,7 @@ ER Model:
 
 
 Video Link: 
+
 
 
 
