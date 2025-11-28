@@ -1,6 +1,7 @@
 Name (SID): Altan Dogan Hoca (101311866)
 Name (SID): Teddy Al Houwayek (101316419)
 
+
 -- Summary --
 This is a health and fitness management system with a relational database (postgreSQL) to manage the daily activities of a modern fitness center with persistent storage in Java. 
 It offers individual and group training classes, with appropriate scheduling, capacity management, and trainer coordination.
@@ -19,6 +20,7 @@ Administrators handle the operational backbone of the facility by managing room 
 They oversee equipment maintenance by tracking machine status, logging maintenance issues, assigning repair tasks, and updating maintenance records once issues are resolved. 
 Admins also manage class scheduling, including creating classes, assigning trainers, setting capacities, and updating or canceling sessions. 
 They maintain the billing system by generating invoices for memberships, training sessions, and class enrollments, recording payment details, and tracking financial status.
+
 
 -- Application Operations --
 Member Functions: (5)
@@ -43,5 +45,6 @@ ER Model:
 
 
 Video Link: 
+
 
 
