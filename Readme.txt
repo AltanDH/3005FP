@@ -45,7 +45,6 @@ Administrators handle the operational backbone of the facility by managing room 
 Member Functions: (5)
 - User Registration: Create a new member with unique email and basic profile info.
 - Profile Management: Update personal details, fitness goals (e.g., weight target), and input new health metrics (e.g., weight, heart rate).
-- Dashboard: Show latest health stats, active goals, past class count, upcoming sessions.
 - Group Class Registration: Register for scheduled classes if capacity permits.
 - Health History: Log multiple metric entries; do not overwrite. Must support time-stamped entries.
 
@@ -57,6 +56,7 @@ Trainer Functions: (3)
 Administrative Staff Functions: (2)
 - Room Booking: Assign rooms for sessions or classes. Prevent double-booking.
 - Class Management: Define new classes, assign trainers/rooms/time, update schedules.
+- Equipment Maintenance: Log issues, track repair status, associate with room/equipment.
 
 
 -- Files -- 
@@ -72,6 +72,7 @@ pom.xml:
 
 
 Video Link: 
+
 
 
 
