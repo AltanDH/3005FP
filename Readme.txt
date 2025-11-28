@@ -60,7 +60,9 @@ Administrative Staff Functions: (2)
 
 -- Files -- 
 ER Model:
-- UML notation, as per the notation in the notes, an arrow indicates a cardinality of 1, otherwise cardinality is 1 to N
+- Uses UML notation
+- As per the notation in the notes, an arrow indicates a cardinality of 1, otherwise cardinality is N
+- We explicitly mentioned anything with a cardinality that can be 0 to N
 
 dml.sql:
 - Rebuilds and displays the table with base tuples each time you run the file in a PostgreSQL database in pgAdmin4
@@ -71,6 +73,7 @@ pom.xml:
 
 
 Video Link: 
+
 
 
 
