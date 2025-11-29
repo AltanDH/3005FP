@@ -18,11 +18,12 @@ Prerequisites:
 
 Steps to Run:
 1. Create a database in Postgres using pgAdmin4
-2. Execute the DDL.sql then DML.sql file in that order in pgAdmin4 to create the DB tables and data
-3. Create a project in IntelliJ Community Edition with Maven selected (otherwise you're on your own), select quickstart for archetype
-4. Go into DatabaseHandler.java and set your database name, username, and password (pgAdmin4 data)
-5. Place the pom.xml file in the root folder location, remove any auto generated pom file
-6. Run the HFCMSApp.java file
+2. Import the provided DDL.sql file into the created Database, then Execute it to make the DB tables.
+3. Import the provided DML.sql file into the created Database, then Execute it to populate the DB tables with starting data.
+4. Create a project in IntelliJ Community Edition with Maven selected (otherwise you're on your own), select quickstart for archetype
+5. Go into DatabaseHandler.java and set your database name, username, and password (pgAdmin4 data)
+6. Place the pom.xml file in the root folder location, remove any auto generated pom file
+7. Run the HFCMSApp.java file
 
 Video Link: 
 - 
@@ -87,6 +88,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
