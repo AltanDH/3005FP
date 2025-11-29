@@ -24,6 +24,9 @@ Steps to Run:
 5. Place the pom.xml file in the root
 6. Run the SimpleDatabaseHandler.Java file
 
+Video Link: 
+- 
+
 Assumptions:
 - Each group fitness class is limited to any number of trainers teaching it
 - A member can have multiple fitness goals
@@ -71,14 +74,6 @@ dml.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
-
-
-Video Link: 
-
-
-
-
-
 
 
 
