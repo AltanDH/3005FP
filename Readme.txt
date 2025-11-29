@@ -28,7 +28,7 @@ Video Link:
 - 
 
 Assumptions:
-- Each group fitness class is limited to any number of trainers teaching it
+- It's possible for group fitness classes to have multiple trainers teaching it
 - A member can have multiple fitness goals
 
 
@@ -78,6 +78,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
