@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class DatabaseHandler {
     // Get the required data to connect to the database
     // localhost:5432 is the default port Postgres listens on
-    private static final String DATABASE_NAME = "3005A3"; // Your DB name (edit here)
+    private static final String DATABASE_NAME = "3005FP"; // Your DB name (edit here)
     private static final String USER = "postgres"; // Username (edit here)
     private static final String PASSWORD = "Tupras99"; // User's password (edit here)
     private static final String URL = "jdbc:postgresql://localhost:5432/" + DATABASE_NAME; // (Do not change)
@@ -59,39 +59,31 @@ public class DatabaseHandler {
     // This is made with the JDBC documentation to set data in the Postgres database
     // First creates a query and scanner to grab user data for a new student's fields
     // Then it creates a prepared statement which binds data in the query
-    public static void addStudent(Connection connection) throws SQLException {
-        // Create a scanner object to ask the user what the new student's fields are
-        Scanner scanner = new Scanner(System.in);
-
-        // Ask user for student info
-        System.out.print("Enter first name: ");
-        String firstName = scanner.nextLine();
-        System.out.print("Enter last name: ");
-        String lastName = scanner.nextLine();
-        System.out.print("Enter email: ");
-        String email = scanner.nextLine();
-        System.out.print("Enter enrollment date (YYYY-MM-DD): ");
-        String enrollmentDate = scanner.nextLine();
-
-        // Basic query, "?" gets replaced by the values in order of first_name, last_name, email, and enrollment_date
-        String query = "INSERT INTO students (first_name, last_name, email, enrollment_date) VALUES (?, ?, ?, ?)";
+    public static void addTuple(Connection connection, String table, String[] values) throws SQLException {
+        // Joins the query with the table and fields of the tuple to create a syntactically valid query
+        String[] colNames = getModifiableColumnNames(connection, table);
+        String query = "INSERT INTO " + table + " (" + String.join(", ", colNames) + ") VALUES (";
+        for (int i = 0; i < colNames.length - 1; i++) {
+            query += "?, ";
+        }
+        query += "?)";
 
         // Update the data
         // Create a PreparedStatement and store it to set values of "?"
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             // Number specifies the question mark which gets updated from left to right
-            statement.setString(1, firstName);
-            statement.setString(2, lastName);
-            statement.setString(3, email);
-            statement.setDate(4, Date.valueOf(enrollmentDate));
+            for (int i = 0; i < colNames.length; i++) {
+                statement.setString(i + 1, values[i]);
+            }
 
             // Execute the query
             statement.executeUpdate();
-            System.out.println("\nStudent added successfully");
+            System.out.println("\nAdded successfully");
 
         } catch (IllegalArgumentException illegalArgumentException) { // Date object throws an error if invalid
             System.out.println("\nError! Invalid date entered");
         } catch (Exception exception) {
+            System.out.println(query);
             System.out.println("\nError! Invalid data entered");
             exception.printStackTrace();
         }
@@ -168,6 +160,62 @@ public class DatabaseHandler {
     }
 
     // ---------- HELPER FUNCTIONS ----------
+    // Get the names of each column in a table dynamically
+    public static String[] getColumnNames(Connection connection, String table) throws SQLException {
+        // Try not to spend time returning columns
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery("SELECT * FROM " + table + " LIMIT 0"); // Only need metadata
+        ResultSetMetaData metaData = result.getMetaData();
 
+        // Get the number of columns
+        int columnCount = metaData.getColumnCount();
+        String[] columnNames = new String[columnCount];
+
+        // Loop through columns and get the name of each
+        for (int i = 1; i <= columnCount; i++) {
+            columnNames[i - 1] = metaData.getColumnName(i); // ResultSetMetaData is 1-based
+        }
+
+        result.close();
+        statement.close();
+
+        return columnNames;
+    }
+
+    // Since some columns are not modifiable like fields defined as AUTO INCREMENT, do not return those
+    public static String[] getModifiableColumnNames(Connection connection, String table) throws SQLException {
+        // Create a statement, provide a fast dummy query, and get the metadata
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery("SELECT * FROM " + table + " LIMIT 0"); // Only need metadata
+        ResultSetMetaData metaData = result.getMetaData();
+
+        // Get the number of columns
+        int columnCount = metaData.getColumnCount();
+
+        // Count number of modifiable columns
+        int modifiableCount = 0;
+        for (int i = 1; i <= columnCount; i++) {
+            if (!metaData.isAutoIncrement(i)) {
+                modifiableCount++;
+            }
+        }
+
+        String[] columnNames = new String[modifiableCount];
+
+        // Add every column that is not auto increment
+        int backCounter = 0;
+        for (int i = 1; i <= metaData.getColumnCount(); i++) {
+            if (!metaData.isAutoIncrement(i)) { // Skip auto-increment columns
+                columnNames[i - 1 - backCounter] = metaData.getColumnName(i);
+            } else {
+                backCounter++;
+            }
+        }
+
+        result.close();
+        statement.close();
+
+        return columnNames;
+    }
 
 }

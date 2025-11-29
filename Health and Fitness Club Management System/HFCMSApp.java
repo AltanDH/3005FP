@@ -34,10 +34,11 @@ public class HFCMSApp {
                 // Route the program to the choice the user selected
                 switch (choice) {
                     case 1: // Get all students
-                        dbHandler.getAll(connection,"Students");
+                        dbHandler.getAll(connection,"Trainers");
                         break;
                     case 2: // Add a student
-                        dbHandler.addStudent(connection);
+                        String[] test = {"alex.trainer@fitclub.com", "Alex", "Moreno", "pass1"};
+                        dbHandler.addTuple(connection, "Trainers", test);
                         break;
                     case 3: // Update the student email
                         dbHandler.updateStudentEmail(connection);
