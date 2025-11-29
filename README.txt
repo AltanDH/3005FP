@@ -14,15 +14,15 @@ Prerequisites:
 - Maven installed
 - PostgreSQL
 - Database exists (Mine is called: 3005FP), and is defined by you in SimpleDatabaseHandler.Java file
-- PostgreSQL username and password is defined by you in SimpleDatabaseHandler.Java file
+- PostgreSQL username and password is defined by you in DatabaseHandler.java file
 
 Steps to Run:
 1. Create a database in Postgres using pgAdmin4
-2. Execute the DDL.sql file provided in pgAdmin4 to create the DB tables
-3. Create a project in IntelliJ Community Edition with Maven selected (otherwise you're on your own)
+2. Execute the DDL.sql then DML.sql file in that order in pgAdmin4 to create the DB tables and data
+3. Create a project in IntelliJ Community Edition with Maven selected (otherwise you're on your own), select quickstart for archetype
 4. Go into SimpleDatabaseHandler.Java and set your database name, username, and password (pgAdmin4 data)
-5. Place the pom.xml file in the root
-6. Run the SimpleDatabaseHandler.Java file
+5. Place the pom.xml file in the root folder location
+6. Run the HFCMSApp.java file
 
 Video Link: 
 - 
@@ -87,6 +87,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
