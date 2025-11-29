@@ -63,6 +63,7 @@ Administrative Staff Functions: (2)
 ER Model:
 - Uses UML notation
 - As per the notation in the notes, an arrow indicates a cardinality of 1, otherwise cardinality is N
+- It is normalized to 1NF, 2NF, and 3NF because...
 
 dml.sql:
 - Rebuilds and displays the table with base tuples each time you run the file in a PostgreSQL database in pgAdmin4
@@ -73,6 +74,7 @@ pom.xml:
 
 
 Video Link: 
+
 
 
 
