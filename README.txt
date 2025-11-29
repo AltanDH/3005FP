@@ -69,12 +69,17 @@ Administrative Staff Functions: (2)
 ER Model:
 - Uses UML notation
 - As per the notation in the notes, an arrow indicates a cardinality of 1, otherwise cardinality is N
-- It is normalized to 1NF because there are no multivalued attributes or composite attributes in the database
-- It is normalized to 2NF because all primary key -> non-key attribute relations are fully functionally dependent
-- It is normalized to 3NF because there is no relation such that X -> Y, Y -> Z (no transitive relationships)
 
 DDL.sql:
-- Defines all the Database Tables if they don't already exist.
+- Defines the Relational Databse Schema, creating all the Tables if they don't already exist.
+
+Normalization Justification:
+- The schema satisfies 1NF because all the attributes store single atomic values. 
+- It satisfies 2NF because all "primary key -> nonprime attribute" relations are fully functionally dependent. Additionally, in the case of a table 
+having a composite primary key, there are no nonprime attributes that depend on only part of that key, thus we avoid having partial dependency.
+Note that this is possible for our Reports relationship Table as long as we respect its corresponding assumption mentioned in the "Assumptions" section at the top of the README.
+- It satisfies 3NF because no nonprime attribute depends on another nonprime attribute; all nonprime attributes depend directly on the primary key.
+In other words, there is no relation such that X -> Z and Z -> Y hold, where Z is a nonprime attribute (no transitive relationships).
 
 DML.sql:
 - Populates the Tables with starting data.
@@ -82,6 +87,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
