@@ -69,12 +69,16 @@ ER Model:
 - As per the notation in the notes, an arrow indicates a cardinality of 1, otherwise cardinality is N
 - It is normalized to 1NF, 2NF, and 3NF because...
 
-dml.sql:
-- Rebuilds and displays the table with base tuples each time you run the file in a PostgreSQL database in pgAdmin4
+DDL.sql:
+- Defines all the Database Tables if they don't already exist.
+
+DML.sql:
+- Populates the Tables with starting data.
 
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
