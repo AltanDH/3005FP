@@ -34,17 +34,21 @@ public class HFCMSApp {
                 // Route the program to the choice the user selected
                 switch (choice) {
                     case 1: // Get all students
-                        dbHandler.getAll(connection,"Trainers");
+                        String out = dbHandler.getAll(connection,"trainers");
+                        System.out.println(out);
                         break;
                     case 2: // Add a student
                         String[] test = {"alex1.trainer@fitclub.com", "Alex", "Moreno", "pass1"};
                         dbHandler.addTuple(connection, "Trainers", test);
                         break;
                     case 3: // Update the student email
-                        dbHandler.updateStudentEmail(connection);
+                        String[] newTuple = {"1", "1", "1", "1"};
+                        String[] id = {"alex1.trainer@fitclub.com"};
+                        dbHandler.updateTuple(connection, "trainers", newTuple, id);
                         break;
                     case 4: // Delete a student
-                        dbHandler.deleteStudent(connection);
+                        String[] id1 = {"alex1.trainer@fitclub.com"};
+                        dbHandler.deleteTuple(connection, "trainers", id1);
                         break;
                     case 5: // Exit the program
                         System.out.println("\n Exiting the program...");

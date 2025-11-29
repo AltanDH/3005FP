@@ -6,7 +6,7 @@ public class DatabaseHandler {
     // localhost:5432 is the default port Postgres listens on
     private static final String DATABASE_NAME = "3005FP"; // Your DB name (edit here)
     private static final String USER = "postgres"; // Username (edit here)
-    private static final String PASSWORD = "Teddy2005*"; // User's password (edit here)
+    private static final String PASSWORD = "Tupras99"; // User's password (edit here)
     private static final String URL = "jdbc:postgresql://localhost:5432/" + DATABASE_NAME; // (Do not change)
 
     // Getters
@@ -17,15 +17,13 @@ public class DatabaseHandler {
 
 
     // ---------- CRUD OPERATION FUNCTIONS ----------
-    // Retrieves and displays all students
-    // This is made with the JDBC documentation to grab data from the Postgres database
-    // First create a statement with a connection, then execute the statement and store the result
-    // Print the result, then close the result and statement
-    public static void getAll(Connection connection, String table) {
-        System.out.println("\nGetting all data from table " + table);
+    // Retrieves and displays all tuples in a table
+    public static String getAll(Connection connection, String table) {
+        System.out.println("\nGetting all data from: " + table);
 
         // Basic query, gets all tuples in the database
         String query = "SELECT * FROM " + table;
+        String out = "";
 
         try {
             // Grab the result of a query
@@ -38,31 +36,31 @@ public class DatabaseHandler {
 
             // Print column names
             for (int i = 1; i <= columnCount; i++) {
-                System.out.print(metaData.getColumnName(i));
-                if (i < columnCount) { System.out.print(" | "); }
+                out += metaData.getColumnName(i);
+                if (i < columnCount) { out += " | "; }
             }
-            System.out.println();
+            //System.out.println();
+            out += "\n";
 
             // Print each tuple
             while (result.next()) {
                 for (int i = 1; i <= columnCount; i++) {
-                    System.out.print(result.getString(i)); // Uses getString for any type
-                    if (i < columnCount) System.out.print(" | ");
+                    out += result.getString(i);
+                    if (i < columnCount) { out += " | "; }
                 }
-                System.out.println();
+                out += "\n";
             }
             result.close();
             statement.close();
 
         } catch (SQLException sqlException) {
-            System.out.println("\nError! Invalid Query Entered");
+            System.out.println("\nError! Invalid query entered");
         }
+
+        return out;
     }
 
-    // Adds a new student to the database given all fields
-    // This is made with the JDBC documentation to set data in the Postgres database
-    // First creates a query and scanner to grab user data for a new student's fields
-    // Then it creates a prepared statement which binds data in the query
+    // Adds a new tuple to the table
     public static void addTuple(Connection connection, String table, String[] values) throws SQLException {
         // Joins the query with the table and fields of the tuple to create a syntactically valid query
         String[] colNames = getModifiableColumnNames(connection, table);
@@ -94,68 +92,91 @@ public class DatabaseHandler {
         }
     }
 
-    // Updates a student's email using their ID
-    // Grabs the data from the user, then updates the specified student
-    public static void updateStudentEmail(Connection connection) {
-        // Scanner for getting the new email and the student id that will be updated
-        Scanner scanner = new Scanner(System.in);
+    // Updates a tuple from a table
+    // newTuple is an array consisting of all non auto increment columns of a tuple
+    public static void updateTuple(Connection connection, String table, String[] newTuple, String[] primaryKeyValues) throws SQLException {
+        try {
+            String[] modifiableColumnNames = getModifiableColumnNames(connection, table);
 
-        // Get the data
-        System.out.print("Enter student_id you would like to update: ");
-        int student_id = scanner.nextInt();
-        scanner.nextLine(); // Clear the newline symbol so newEmail reads properly
-        System.out.print("Enter the new email for this student: ");
-        String newEmail = scanner.nextLine();
+            // Set
+            String set = "";
+            // Iterate over every non id column
+            for (int i = 0; i < modifiableColumnNames.length; i++) {
+                if (i != 0) { set += ", "; }
+                set += modifiableColumnNames[i] + " = ?";
+            }
 
-        // Basic query, "?" gets replaced by the value of email and student_id
-        String query = "UPDATE students SET email = ? WHERE student_id = ?";
+            // Where
+            String where = "";
+            String[] pkColNames = getPrimaryKeyColumns(connection, table);
+            // Iterate over every modifiable column
+            for (int i = 0; i < pkColNames.length; i++) {
+                if (i > 0) { where += " AND ";}
+                where += pkColNames[i] + " = ?";
+            }
 
-        // Update the data
-        // Create a PreparedStatement and store it to set values of "?"
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            // Number specifies the question mark which gets updated from left to right
-            statement.setString(1, newEmail);
-            statement.setInt(2, student_id);
+            String query = "UPDATE " + table + " SET " + set + " WHERE " + where;
+
+            // Create a PreparedStatement and store it to set values of "?"
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            // Set
+            // Fill in the ?
+            int i;
+            for (i = 0; i < newTuple.length; i++) {
+                statement.setString(i + 1, newTuple[i]);
+            }
+
+            // Where
+            // Fill in the ?
+            for (int j = 0; j < primaryKeyValues.length; j++) {
+                statement.setString(j + i + 1, primaryKeyValues[j]);
+            }
 
             // Execute the query
             int rowsAltered = statement.executeUpdate();
-            if (rowsAltered <= 0) { // If no rows were changed then no data was updated
-                System.out.println("\nstudent_id does not exist, no data was altered");
-            } else { // Otherwise data was updated
-                System.out.println("\nStudent email updated successfully");
+            if (rowsAltered > 0) {
+                System.out.println("\nUpdate successful");
+            } else {
+                System.out.println("\nNo data was updated");
             }
-
-        } catch (Exception exception) {
+        } catch (SQLException e) {
+            System.out.println("\nError! Duplicate data entered");
+        }
+        catch (Exception exception) {
             System.out.println("\nError! Invalid data entered");
             exception.printStackTrace();
         }
     }
 
-    // Deletes a student by ID
-    // Asks the user for a student_id and deletes the student with that student_id
-    public static void deleteStudent(Connection connection) {
-        // Scanner for getting the ID of the student to delete
-        Scanner scanner = new Scanner(System.in);
-
-        // Get the data
-        System.out.println("Enter the student_id of the student to delete: ");
-        int goner = scanner.nextInt();
-
-        // Basic query, "?" gets replaced by the value of "goner"
-        String query = "DELETE FROM students WHERE student_id = ?";
-
-        // Perform the deletion
+    // Deletes a tuple by taking in a table and the primary key values
+    public static void deleteTuple(Connection connection, String table, String[] primaryKeyValues) {
         // Create a PreparedStatement and store it to set values of "?"
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            // Number specifies the question mark which gets updated from left to right
-            statement.setInt(1, goner);
+        try {
+            // Where
+            String where = "";
+            String[] pkColNames = getPrimaryKeyColumns(connection, table);
+            // Iterate over every modifiable column
+            for (int i = 0; i < pkColNames.length; i++) {
+                if (i > 0) { where += " AND ";}
+                where += pkColNames[i] + " = ?";
+            }
+
+            String query = "DELETE FROM " + table + " WHERE " + where ;
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            // Where
+            // Fill in the ?
+            for (int i = 0; i < primaryKeyValues.length; i++) {
+                statement.setString(i + 1, primaryKeyValues[i]);
+            }
 
             // Execute the query
             int rowsAltered = statement.executeUpdate();
             if (rowsAltered <= 0) { // If no rows were changed then no data was updated
-                System.out.println("\nstudent_id does not exist, no data was altered");
+                System.out.println("\nTuple does not exist, no data was altered");
             } else { // Otherwise data was updated
-                System.out.println("\nStudent removed successfully");
+                System.out.println("\nTuple removed successfully");
             }
 
         } catch (Exception exception) {
@@ -221,6 +242,33 @@ public class DatabaseHandler {
         statement.close();
 
         return columnNames;
+    }
+
+    // Gets the primary key columns of a table
+    public static String[] getPrimaryKeyColumns(Connection connection, String table) throws SQLException {
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet result = metaData.getPrimaryKeys(null, null, table);
+
+        // Count the number of primary keys
+        int count = 0;
+        while (result.next()) {
+            count++;
+        }
+        result.close();
+        result = metaData.getPrimaryKeys(null, null, table);
+
+        // Create the array to be filled with pk columns
+        String[] pkCols = new String[count];
+
+        // Fill the array
+        int i = 0;
+        while (result.next()) {
+            pkCols[i] = result.getString("COLUMN_NAME");
+            i++;
+        }
+        result.close();
+
+        return pkCols;
     }
 
 }
