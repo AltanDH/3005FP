@@ -75,11 +75,9 @@ DDL.sql:
 - Defines the Relational Databse Schema, creating all the Tables if they don't already exist.
 
 Normalization Justification:
-- The schema satisfies 1NF because all the attributes store single atomic values. 
-- It satisfies 2NF because all "primary key -> nonprime attribute" relations are fully functionally dependent. Additionally, in the case of a table 
-having a composite primary key, there are no nonprime attributes that depend on only part of that key, thus we avoid having partial dependency.
-Note that this is possible for our Reports relationship Table as long as we respect its corresponding assumption mentioned in the "Assumptions" section at the top of the README.
-- It satisfies 3NF because no nonprime attribute depends on another nonprime attribute; all nonprime attributes depend directly on the primary key.
+1NF - Satisfied because all the attributes store single atomic values. 
+2NF - Satisfied because all "primary key -> nonprime attribute" relations are fully functionally dependent. Additionally, in the case of a table  having a composite primary key, there are no nonprime attributes that depend on only part of that key, thus we avoid having partial dependency. Note that this is possible for our Reports relationship Table as long as we respect its corresponding assumption mentioned in the "Assumptions" section at the top of the README.
+3NF - Satisfied because no nonprime attribute depends on another nonprime attribute; all nonprime attributes depend directly on the primary key.
 In other words, there is no relation such that X -> Z and Z -> Y hold, where Z is a nonprime attribute (no transitive relationships).
 
 DML.sql:
@@ -88,6 +86,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
