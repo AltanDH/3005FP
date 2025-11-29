@@ -23,9 +23,9 @@ Steps to Run:
 4. Create a project in IntelliJ Community Edition by selecting "Maven Archetype" in the Generators section on the left hand side (otherwise you're on your own), then make sure to add the archetype ending with "quickstart" from the dropdown list, then click Create.
 5. Delete the "src/test" folder and the contents of "src/main/java/*" that are automatically generated.
 6. Place the ".java" files that can be found in the submission's "app/" folder into the "src/main/java/" folder of the project, and click "Refactor" when prompted.
-7. Go into DatabaseHandler.java and set your database name, username, and password (pgAdmin4 data)
-8. Drag the submission's "pom.xml" into the root folder, click Refactor, and allow it to overwrite all files as prompted
-9. Reload the project in Intelij (Closing and re-opening will suffice)
+7. Go into DatabaseHandler.java and at the top of the file, set the 'DATABASE_NAME' to your previously created pgAdmin4 database name, as well as the "USER" and "PASSWORD" variables to your pgAdmin4 'username' and 'password'.
+8. Drag the submission's "app/pom.xml" file into the IntelliJ project's root folder, click Refactor, and allow it to overwrite all files as prompted
+9. Reload the IntelliJ project (Closing and re-opening will suffice)
 10. Run the HFCMSApp.java file
 
 Video Link: 
@@ -91,6 +91,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
