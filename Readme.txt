@@ -67,7 +67,9 @@ Administrative Staff Functions: (2)
 ER Model:
 - Uses UML notation
 - As per the notation in the notes, an arrow indicates a cardinality of 1, otherwise cardinality is N
-- It is normalized to 1NF, 2NF, and 3NF because...
+- It is normalized to 1NF because there are no multivalued attributes or composite attributes in the database
+- It is normalized to 2NF because all primary key -> non-key attribute relations are fully functionally dependent
+- It is normalized to 3NF because there is no relation such that X -> Y, Y -> Z (no transitive relationships)
 
 DDL.sql:
 - Defines all the Database Tables if they don't already exist.
@@ -78,6 +80,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
