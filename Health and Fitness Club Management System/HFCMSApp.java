@@ -37,7 +37,7 @@ public class HFCMSApp {
                         dbHandler.getAll(connection,"Trainers");
                         break;
                     case 2: // Add a student
-                        String[] test = {"alex.trainer@fitclub.com", "Alex", "Moreno", "pass1"};
+                        String[] test = {"alex1.trainer@fitclub.com", "Alex", "Moreno", "pass1"};
                         dbHandler.addTuple(connection, "Trainers", test);
                         break;
                     case 3: // Update the student email
@@ -53,7 +53,7 @@ public class HFCMSApp {
                         System.out.println("\n ERROR! Please enter a number from 1 to 5");
                 }
             }
-        } catch (SQLException exception) { // Catch and print the stack trace for debugging
+        } catch (Exception exception) { // Catch and print the stack trace for debugging
             exception.printStackTrace();
         }
     }

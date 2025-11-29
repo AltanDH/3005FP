@@ -6,7 +6,7 @@ public class DatabaseHandler {
     // localhost:5432 is the default port Postgres listens on
     private static final String DATABASE_NAME = "3005FP"; // Your DB name (edit here)
     private static final String USER = "postgres"; // Username (edit here)
-    private static final String PASSWORD = "Tupras99"; // User's password (edit here)
+    private static final String PASSWORD = "Password"; // User's password (edit here)
     private static final String URL = "jdbc:postgresql://localhost:5432/" + DATABASE_NAME; // (Do not change)
 
     // Getters
@@ -21,38 +21,42 @@ public class DatabaseHandler {
     // This is made with the JDBC documentation to grab data from the Postgres database
     // First create a statement with a connection, then execute the statement and store the result
     // Print the result, then close the result and statement
-    public static void getAll(Connection connection, String table) throws SQLException {
+    public static void getAll(Connection connection, String table) {
         System.out.println("\nGetting all data from table " + table);
 
         // Basic query, gets all tuples in the database
         String query = "SELECT * FROM " + table;
 
-        // Grab the result of a query
-        Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(query);
+        try {
+            // Grab the result of a query
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(query);
 
-        // Get the metadata and column count of a passed in query
-        ResultSetMetaData metaData = result.getMetaData();
-        int columnCount = metaData.getColumnCount();
+            // Get the metadata and column count of a passed in query
+            ResultSetMetaData metaData = result.getMetaData();
+            int columnCount = metaData.getColumnCount();
 
-        // Print column names
-        for (int i = 1; i <= columnCount; i++) {
-            System.out.print(metaData.getColumnName(i));
-            if (i < columnCount) { System.out.print(" | "); }
-        }
-        System.out.println();
-
-        // Print each tuple
-        while (result.next()) {
+            // Print column names
             for (int i = 1; i <= columnCount; i++) {
-                System.out.print(result.getString(i)); // Uses getString for any type
-                if (i < columnCount) System.out.print(" | ");
+                System.out.print(metaData.getColumnName(i));
+                if (i < columnCount) { System.out.print(" | "); }
             }
             System.out.println();
-        }
 
-        result.close();
-        statement.close();
+            // Print each tuple
+            while (result.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    System.out.print(result.getString(i)); // Uses getString for any type
+                    if (i < columnCount) System.out.print(" | ");
+                }
+                System.out.println();
+            }
+            result.close();
+            statement.close();
+
+        } catch (SQLException sqlException) {
+            System.out.println("\nError! Invalid Query Entered");
+        }
     }
 
     // Adds a new student to the database given all fields
@@ -69,8 +73,9 @@ public class DatabaseHandler {
         query += "?)";
 
         // Update the data
-        // Create a PreparedStatement and store it to set values of "?"
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try  {
+            // Create a PreparedStatement and store it to set values of "?"
+            PreparedStatement statement = connection.prepareStatement(query);
             // Number specifies the question mark which gets updated from left to right
             for (int i = 0; i < colNames.length; i++) {
                 statement.setString(i + 1, values[i]);
@@ -80,12 +85,12 @@ public class DatabaseHandler {
             statement.executeUpdate();
             System.out.println("\nAdded successfully");
 
-        } catch (IllegalArgumentException illegalArgumentException) { // Date object throws an error if invalid
-            System.out.println("\nError! Invalid date entered");
-        } catch (Exception exception) {
+        } catch (SQLException sqlException) {
+            System.out.println("\nError! Invalid Query Entered");
+        }
+        catch (Exception exception) {
             System.out.println(query);
             System.out.println("\nError! Invalid data entered");
-            exception.printStackTrace();
         }
     }
 
