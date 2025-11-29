@@ -17,12 +17,12 @@ Prerequisites:
 - PostgreSQL username and password is defined by you in DatabaseHandler.java file
 
 Steps to Run:
-1. Create a database in Postgres using pgAdmin4
-2. Import the provided DDL.sql file into the created Database, then Execute it to make the DB tables
-3. Import the provided DML.sql file into the created Database, then Execute it to populate the DB tables with starting data
-4. Create a project in IntelliJ Community Edition by selecting "Maven Archetype" in the Generators section on the left hand side (otherwise you're on your own), then make sure to add the archetype ending with "quickstart" from the dropdown list, then click Create
-5. Delete the Tests folder and the contents of "src/main/java/" that are automatically generated. 
-6. Place the ".java" files from the submission into the "src/main/java" folder of the project and click "Refactor" when prompted
+1. Create a database in Postgres using pgAdmin4.
+2. Import the provided "sql/DDL.sql" file into the created Database, then Execute it to make the DB tables.
+3. Import the provided "sql/DML.sql" file into the created Database, then Execute it to populate the DB tables with starting data.
+4. Create a project in IntelliJ Community Edition by selecting "Maven Archetype" in the Generators section on the left hand side (otherwise you're on your own), then make sure to add the archetype ending with "quickstart" from the dropdown list, then click Create.
+5. Delete the "src/test" folder and the contents of "src/main/java/*" that are automatically generated.
+6. Place the ".java" files that can be found in the submission's "app/" folder into the "src/main/java/" folder of the project, and click "Refactor" when prompted.
 7. Go into DatabaseHandler.java and set your database name, username, and password (pgAdmin4 data)
 8. Drag the submission's "pom.xml" into the root folder, click Refactor, and allow it to overwrite all files as prompted
 9. Reload the project in Intelij (Closing and re-opening will suffice)
@@ -91,6 +91,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
