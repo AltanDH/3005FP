@@ -1,7 +1,7 @@
 import java.sql.*;
 import java.util.Scanner;
 
-public class HFCMSAPP {
+public class HFCMSApp {
 
     // Main function which runs the program's loop
     public static void main(String[] args) {
@@ -34,7 +34,7 @@ public class HFCMSAPP {
                 // Route the program to the choice the user selected
                 switch (choice) {
                     case 1: // Get all students
-                        dbHandler.getAllStudents(connection);
+                        dbHandler.getAll(connection,"Students");
                         break;
                     case 2: // Add a student
                         dbHandler.addStudent(connection);

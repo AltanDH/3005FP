@@ -21,28 +21,34 @@ public class DatabaseHandler {
     // This is made with the JDBC documentation to grab data from the Postgres database
     // First create a statement with a connection, then execute the statement and store the result
     // Print the result, then close the result and statement
-    public static void getAllStudents(Connection connection) throws SQLException {
-        System.out.println("\nGetting all students...");
+    public static void getAll(Connection connection, String table) throws SQLException {
+        System.out.println("\nGetting all data from table " + table);
 
         // Basic query, gets all tuples in the database
-        String query = "SELECT * FROM students";
+        String query = "SELECT * FROM " + table;
 
         // Grab the result of a query
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(query);
 
-        // While there is a result, print the result
-        System.out.println("student_id | first_name | last_name | email | enrollment_date");
+        // Get the metadata and column count of a passed in query
+        ResultSetMetaData metaData = result.getMetaData();
+        int columnCount = metaData.getColumnCount();
+
+        // Print column names
+        for (int i = 1; i <= columnCount; i++) {
+            System.out.print(metaData.getColumnName(i));
+            if (i < columnCount) { System.out.print(" | "); }
+        }
+        System.out.println();
+
+        // Print each tuple
         while (result.next()) {
-            // Integer, string, string, string, string, newline pattern
-            System.out.printf("%d | %s | %s | %s | %s%n",
-                    // Columns
-                    result.getInt(1),
-                    result.getString(2),
-                    result.getString(3),
-                    result.getString(4),
-                    result.getDate(5)
-            );
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.print(result.getString(i)); // Uses getString for any type
+                if (i < columnCount) System.out.print(" | ");
+            }
+            System.out.println();
         }
 
         result.close();
@@ -160,5 +166,8 @@ public class DatabaseHandler {
             exception.printStackTrace();
         }
     }
+
+    // ---------- HELPER FUNCTIONS ----------
+
 
 }
