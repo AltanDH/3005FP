@@ -30,7 +30,7 @@ Video Link:
 Assumptions:
 - It's possible for group fitness classes to have multiple trainers teaching it
 - A member can have multiple fitness goals
-
+- Users log into their accounts using their email and password
 
 -- Summary --
 This is a health and fitness management system with a relational database (postgreSQL) to manage the daily activities of a modern fitness center with persistent storage in Java. It offers individual and group training classes, with appropriate scheduling, capacity management, and trainer coordination. There are 3 different types of users: Members, trainers, and administrative staff, each with specialized access priviledges and functional responsibilities.
@@ -78,6 +78,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
