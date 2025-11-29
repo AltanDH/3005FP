@@ -25,7 +25,7 @@ Steps to Run:
 6. Place the ".java" files from the submission into the "src/main/java" folder of the project and click "Refactor" when prompted
 7. Go into DatabaseHandler.java and set your database name, username, and password (pgAdmin4 data)
 8. Drag the submission's "pom.xml" into the root folder, click Refactor, and allow it to overwrite all files as prompted
-9. Reload the project in Intelij
+9. Reload the project in Intelij (Closing and re-opening will suffice)
 10. Run the HFCMSApp.java file
 
 Video Link: 
@@ -91,6 +91,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
