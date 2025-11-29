@@ -18,7 +18,7 @@ Prerequisites:
 
 Steps to Run:
 1. Create a database in Postgres using pgAdmin4
-2. Run the database with the dml.sql file provided in pgAdmin4
+2. Execute the DDL.sql file provided in pgAdmin4 to create the DB tables
 3. Create a project in IntelliJ Community Edition with Maven selected (otherwise you're on your own)
 4. Go into SimpleDatabaseHandler.Java and set your database name, username, and password (pgAdmin4 data)
 5. Place the pom.xml file in the root
@@ -87,6 +87,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
