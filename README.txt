@@ -78,7 +78,6 @@ ER Model:
 DDL.sql:
 - Defines the Relational Databse Schema, creating all the Tables if they don't already exist.
 
-
 ERD.pdf:
 1NF - Satisfied because all the attributes store single atomic values. 
 2NF - Satisfied because all "primary key -> nonprime attribute" relations are fully functionally dependent. Additionally, in the case of a table  having a composite primary key, there are no nonprime attributes that depend on only part of that key, thus we avoid having partial dependency. Note that this is possible for our Reports relationship Table as long as we respect its corresponding assumption mentioned in the "Assumptions" section at the top of the README.
@@ -91,6 +90,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
