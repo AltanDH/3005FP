@@ -18,23 +18,47 @@ public class DatabaseHandler {
 
     // ---------- CRUD OPERATION FUNCTIONS ----------
     // Retrieves and displays all tuples in a table
-    public static String getAll(Connection connection, String table) {
+    public static String getAll(Connection connection, String table, String[] primaryKeyValues) throws SQLException{
         System.out.println("\nGetting all data from: " + table);
 
-        // Basic query, gets all tuples in the database
-        String query = "SELECT * FROM " + table;
+        // Where
+        String where = "";
+        if (primaryKeyValues.length > 0) {
+            where = " WHERE ";
+            String[] pkColNames = getPrimaryKeyColumns(connection, table);
+            // Iterate over every modifiable column
+            for (int i = 0; i < pkColNames.length; i++) {
+                if (i > 0) {
+                    where += " AND ";
+                }
+                where += pkColNames[i] + " = ?";
+            }
+        }
+
+        // Query
+        String query = "SELECT * FROM " + table + where;
+        // Output string
         String out = "";
 
+        System.out.println(query);
+
         try {
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            // Where
+            // Fill in the ?
+            for (int i = 0; i < primaryKeyValues.length; i++) {
+                statement.setString(i + 1, primaryKeyValues[i]);
+            }
+
             // Grab the result of a query
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(query);
+            ResultSet result = statement.executeQuery();
 
             // Get the metadata and column count of a passed in query
             ResultSetMetaData metaData = result.getMetaData();
             int columnCount = metaData.getColumnCount();
 
-            // Print column names
+            // For each column, add the column name
             for (int i = 1; i <= columnCount; i++) {
                 out += metaData.getColumnName(i);
                 if (i < columnCount) { out += " | "; }
@@ -42,7 +66,7 @@ public class DatabaseHandler {
             //System.out.println();
             out += "\n";
 
-            // Print each tuple
+            // While result, add the result to output
             while (result.next()) {
                 for (int i = 1; i <= columnCount; i++) {
                     out += result.getString(i);
@@ -55,6 +79,8 @@ public class DatabaseHandler {
 
         } catch (SQLException sqlException) {
             System.out.println("\nError! Invalid query entered");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return out;
