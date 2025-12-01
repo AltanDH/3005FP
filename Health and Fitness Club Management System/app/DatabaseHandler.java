@@ -1,12 +1,11 @@
 import java.sql.*;
-import java.util.Scanner;
 
 public class DatabaseHandler {
     // Get the required data to connect to the database
     // localhost:5432 is the default port Postgres listens on
     private static final String DATABASE_NAME = "3005FP"; // Your DB name (edit here)
     private static final String USER = "postgres"; // Username (edit here)
-    private static final String PASSWORD = "Tupras99"; // User's password (edit here)
+    private static final String PASSWORD = "Password"; // User's password (edit here)
     private static final String URL = "jdbc:postgresql://localhost:5432/" + DATABASE_NAME; // (Do not change)
 
     // Getters
