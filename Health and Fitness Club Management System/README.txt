@@ -37,7 +37,7 @@ Assumptions:
 - Users log into their accounts using their email and password
 - All Rooms exist within the same building (and thus have unique identifiers)
 - Each Admin Staff member only makes 1 report per equipment, otherwise it gets overwritten
-
+- Trainers can only look up members they are training
 
 -- Summary --
 This is a health and fitness management system with a relational database (postgreSQL) to manage the daily activities of a modern fitness center with persistent storage in Java. It offers individual and group training classes, with appropriate scheduling, capacity management, and trainer coordination. There are 3 different types of users: Members, trainers, and administrative staff, each with specialized access priviledges and functional responsibilities.
@@ -89,6 +89,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
