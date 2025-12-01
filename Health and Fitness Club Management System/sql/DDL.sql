@@ -104,3 +104,68 @@ CREATE TABLE IF NOT EXISTS Reports (
 	issue_type TEXT NOT NULL,
 	PRIMARY KEY (email, equipment_id)
 );
+
+-- Index to speed up health metric lookups by member email (useful for Health History View)
+CREATE INDEX IF NOT EXISTS health_metric_email_index 
+ON HealthMetrics (email);
+
+-- View that shows the members each trainer teaches along with their latest goal and health details
+CREATE OR REPLACE VIEW TrainerMembersLookup AS
+WITH latest_metrics AS (
+    SELECT DISTINCT ON (email)
+        metric_id, email, weight, height, heart_rate, body_fat_pct, created_at
+    FROM HealthMetrics
+    ORDER BY email, created_at DESC
+),
+latest_goals AS (
+    SELECT DISTINCT ON (email, type)
+        goal_id, email, type, value
+    FROM FitnessGoals
+    ORDER BY email, type, goal_id DESC
+)
+SELECT 
+    t.email AS trainer_email,
+    m.first_name AS member_first_name,
+	m.last_name AS member_last_name,
+    h.weight AS latest_weight,
+    h.height AS latest_height,
+    h.heart_rate AS latest_heart_rate,
+    h.body_fat_pct AS latest_body_fat_pct,
+    g.type AS goal_type,
+    g.value AS goal_value
+FROM Trainers t
+JOIN Teaches teach ON t.email = teach.email
+JOIN Participates p ON p.class_id = teach.class_id
+JOIN Members m ON m.email = p.email
+LEFT JOIN latest_metrics h ON h.email = m.email
+LEFT JOIN latest_goals g ON g.email = m.email;
+
+-- Trigger function def to prevent trainer periods overlap in time
+CREATE OR REPLACE FUNCTION prevent_trainer_periods_overlap()
+RETURNS TRIGGER 
+LANGUAGE plpgsql
+AS 
+$$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM AvailabilityPeriods p
+        WHERE p.email = NEW.email
+          AND p.day = NEW.day
+          AND NEW.start_time < p.end_time
+		  AND NEW.end_time > p.start_time
+		  OR ((p.start_time = NEW.start_time OR p.end_time = NEW.end_time) AND p.day = NEW.day AND p.email = NEW.email)
+    ) THEN
+        RAISE EXCEPTION 'Trainer % already has an overlapping availability on % (% - %).',
+            NEW.email, NEW.day, NEW.start_time, NEW.end_time;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+-- Trigger fires before INSERT or UPDATE on AvailabilityPeriods
+DROP TRIGGER IF EXISTS trigger_overlap ON AvailabilityPeriods;
+CREATE TRIGGER trigger_overlap
+BEFORE INSERT OR UPDATE ON AvailabilityPeriods
+FOR EACH ROW
+EXECUTE FUNCTION prevent_trainer_periods_overlap();
