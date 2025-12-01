@@ -5,7 +5,7 @@ public class DatabaseHandler {
     // localhost:5432 is the default port Postgres listens on
     private static final String DATABASE_NAME = "3005FP"; // Your DB name (edit here)
     private static final String USER = "postgres"; // Username (edit here)
-    private static final String PASSWORD = "Tupras99"; // User's password (edit here)
+    private static final String PASSWORD = "Teddy2005*"; // User's password (edit here)
     private static final String URL = "jdbc:postgresql://localhost:5432/" + DATABASE_NAME; // (Do not change)
 
     // Getters
@@ -18,7 +18,7 @@ public class DatabaseHandler {
     // ---------- CRUD OPERATION FUNCTIONS ----------
     // Retrieves and displays all tuples in a table
     public static String getAll(Connection connection, String table, String[] primaryKeyValues) throws SQLException{
-        System.out.println("\nGetting all data from: " + table);
+        //System.out.println("\nGetting all data from: " + table);
 
         // Where
         String where = "";
@@ -39,7 +39,7 @@ public class DatabaseHandler {
         // Output string
         String out = "";
 
-        System.out.println(query);
+        //System.out.println(query);
 
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -88,7 +88,7 @@ public class DatabaseHandler {
     }
 
     // Adds a new tuple to the table
-    public static void addTuple(Connection connection, String table, Object[] values) throws SQLException {
+    public static boolean addTuple(Connection connection, String table, Object[] values) throws SQLException {
         // Joins the query with the table and fields of the tuple to create a syntactically valid query
         String[] colNames = getModifiableColumnNames(connection, table);
         String query = "INSERT INTO " + table + " (" + String.join(", ", colNames) + ") VALUES (";
@@ -109,15 +109,18 @@ public class DatabaseHandler {
 
             // Execute the query
             statement.executeUpdate();
-            System.out.println("\nAdded successfully");
+            //System.out.println("\nAdded successfully");
+            return true;
 
         } catch (SQLException sqlException) {
             System.out.println("\nError! Invalid Query Entered");
             sqlException.printStackTrace();
+            return false;
         }
         catch (Exception exception) {
             System.out.println(query);
             System.out.println("\nError! Invalid data entered");
+            return false;
         }
     }
 

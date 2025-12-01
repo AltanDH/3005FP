@@ -5,17 +5,23 @@ public class User {
 
     protected String email_;
     protected String password_;
-    protected String role_;
+    protected DatabaseHandler dbHandler_;
 
     // Getter for user role
-    public String getRole() {
-        return role_;
+    public User(DatabaseHandler dbHandler) {
+        dbHandler_ = dbHandler;
     }
 
-    public boolean findUser(Connection connection, DatabaseHandler dbHandler, String email, String password, String table) {
+    public boolean findUser(Connection connection, String email, String password, String table) throws SQLException {
         String[] emailVal = {email};
-        String[] records = dbHandler.getAll(connection, table, emailVal);
-        if (records[3].equals(password)) {
+        String result = dbHandler_.getAll(connection, table, emailVal);
+        String [] records = result.split("\\n");
+
+        if (records.length <= 1) {
+            return false;
+        }
+
+        if (records[1].split(" \\| ")[3].equals(password)) {
             return true;
         }
         return false;
