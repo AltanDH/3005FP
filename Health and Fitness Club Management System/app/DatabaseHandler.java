@@ -5,7 +5,7 @@ public class DatabaseHandler {
     // localhost:5432 is the default port Postgres listens on
     private static final String DATABASE_NAME = "3005FP"; // Your DB name (edit here)
     private static final String USER = "postgres"; // Username (edit here)
-    private static final String PASSWORD = "Password"; // User's password (edit here)
+    private static final String PASSWORD = "Tupras99"; // User's password (edit here)
     private static final String URL = "jdbc:postgresql://localhost:5432/" + DATABASE_NAME; // (Do not change)
 
     // Getters
@@ -88,7 +88,7 @@ public class DatabaseHandler {
     }
 
     // Adds a new tuple to the table
-    public static void addTuple(Connection connection, String table, String[] values) throws SQLException {
+    public static void addTuple(Connection connection, String table, Object[] values) throws SQLException {
         // Joins the query with the table and fields of the tuple to create a syntactically valid query
         String[] colNames = getModifiableColumnNames(connection, table);
         String query = "INSERT INTO " + table + " (" + String.join(", ", colNames) + ") VALUES (";
@@ -103,8 +103,9 @@ public class DatabaseHandler {
             PreparedStatement statement = connection.prepareStatement(query);
             // Number specifies the question mark which gets updated from left to right
             for (int i = 0; i < colNames.length; i++) {
-                statement.setString(i + 1, values[i]);
+                statement.setObject(i + 1, values[i]);
             }
+            System.out.println(statement);
 
             // Execute the query
             statement.executeUpdate();
@@ -112,6 +113,7 @@ public class DatabaseHandler {
 
         } catch (SQLException sqlException) {
             System.out.println("\nError! Invalid Query Entered");
+            sqlException.printStackTrace();
         }
         catch (Exception exception) {
             System.out.println(query);
