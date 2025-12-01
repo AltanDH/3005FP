@@ -22,7 +22,7 @@ public class DatabaseHandler {
 
         // Where
         String where = "";
-        if (primaryKeyValues.length > 0) {
+        if (!primaryKeyValues[0].equals("")) {
             where = " WHERE ";
             String[] pkColNames = getPrimaryKeyColumns(connection, table);
             // Iterate over every modifiable column
@@ -46,8 +46,10 @@ public class DatabaseHandler {
 
             // Where
             // Fill in the ?
-            for (int i = 0; i < primaryKeyValues.length; i++) {
-                statement.setString(i + 1, primaryKeyValues[i]);
+            if (!primaryKeyValues[0].equals("")) {
+                for (int i = 0; i < primaryKeyValues.length; i++) {
+                    statement.setString(i + 1, primaryKeyValues[i]);
+                }
             }
 
             // Grab the result of a query
