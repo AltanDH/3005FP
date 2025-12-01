@@ -59,25 +59,7 @@ public class HFCMSApp {
 
                     case "4":
                         // Create new Member account
-                        System.out.println("Please enter your credentials: ");
-                        System.out.print("Email (e.g. fname.lname@email.com): ");
-                        String email = scanner.nextLine();
-                        System.out.print("First Name: ");
-                        String firstN = scanner.nextLine();
-                        System.out.print("Last Name: ");
-                        String lastN = scanner.nextLine();
-                        System.out.print("Password: ");
-                        String password = scanner.nextLine();
-                        System.out.print("Birth Date (e.g. YYYY-MM-DD): ");
-                        String date = scanner.nextLine();
-                        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                        LocalDate birthDate = LocalDate.parse(date, format);
-                        System.out.print("Gender (e.g. M): ");
-                        String gender = scanner.nextLine();
-                        System.out.print("Phone Number (e.g. XXX-XXX-XXXX): ");
-                        String phone = scanner.nextLine();
-
-                        user.registerMember(connection, email, firstN, lastN, password, birthDate, gender, phone);
+                        user.registerMember(connection, scanner);
 
                         // Show updated Members table for Testing purposes
                         System.out.println("Here are the updated Members accounts for testing purposes:");
@@ -176,12 +158,14 @@ public class HFCMSApp {
                     break;
 
                 case "5":
+                    // Initiate Class Registration Process
                     if (!member.registerForClass(connection, scanner)) {
                         System.out.println("Class registration failed.");
                     }
                     break;
 
                 case "0":
+                    // Log out
                     System.out.println("\n Logging out...");
                     return;
 
@@ -196,17 +180,64 @@ public class HFCMSApp {
     // ------     Trainer REPL     --------
     // ------------------------------------
     private static void trainerREPL(Scanner scanner, User user) throws SQLException {
+        // For testing purposes, display existing accounts
+        System.out.println("\nFor Testing Purposes, here are the existing Trainers: ");
+        String allMembers = DatabaseHandler.getAll(connection, "trainers", new String[]{""});
+        System.out.println(allMembers);
+
         // Logging in as Trainer
-        System.out.println("\nPlease enter your credentials: ");
+        System.out.println("Please enter your credentials: ");
         System.out.print("Email (e.g. fname.lname@email.com): ");
         String email = scanner.nextLine();
-        // Eliminate anything left in the scanner's buffer
         System.out.print("Password: ");
         String password = scanner.nextLine();
-        // Eliminate next line symbol
-        if (user.findUser(connection, email, password, "Trainers")) {
-            //Trainer trainer = new Trainer(email, password, dbHandler);
 
+        if (!user.findUser(connection, email, password, "trainers")) {
+            System.out.println("\n Login failed.");
+            return;
+        }
+
+        Trainer trainer = new Trainer(email, password);
+        System.out.println("\nSuccessfully logged in!");
+
+        while (true) {
+            System.out.println("\n--- TRAINER MENU ---");
+            System.out.println("0. Logout");
+            System.out.println("1. Add an Availability Period");
+            System.out.println("2. View Schedule");
+            System.out.println("3. Lookup Member");
+            System.out.print("Choice (e.g. 1): ");
+
+            // Get the user input
+            String choice = scanner.nextLine();
+
+            // Route the program to the choice the user selected
+            switch (choice) {
+                case "1":
+                    if (trainer.setAvailabilityPeriod(connection, scanner)) {
+                        System.out.println("Availability Periods updated successfully.");
+                    }
+                    break;
+
+                case "2":
+                    // Display schedule
+                    System.out.println("\n Here's an overview of your teaching schedule: ");
+                    trainer.displaySchedule(connection);
+                    break;
+
+                case "3":
+                    // Initiate Member Lookup
+                    trainer.memberLookup(connection, scanner);
+                    break;
+
+                case "0":
+                    // Log out
+                    System.out.println("\n Logging out...");
+                    return;
+
+                default:
+                    System.out.println("\n INVALID CHOICE! Please select a number from 0 to 3");
+            }
         }
     }
 
@@ -215,17 +246,82 @@ public class HFCMSApp {
     // ------    AdminStaff REPL      -------
     // --------------------------------------
     private static void adminStaffREPL(Scanner scanner, User user) throws SQLException {
-        // Logging in as Admin
+        // For testing purposes, display existing accounts
+        System.out.println("\nFor Testing Purposes, here are the existing Admin Staff: ");
+        String allMembers = DatabaseHandler.getAll(connection, "adminstaff", new String[]{""});
+        System.out.println(allMembers);
+
+        // Logging in as an Administrative Staff
         System.out.println("Please enter your credentials: ");
         System.out.print("Email (e.g. fname.lname@email.com): ");
         String email = scanner.nextLine();
-        // Eliminate anything left in the scanner's buffer
         System.out.print("Password: ");
         String password = scanner.nextLine();
-        // Eliminate next line symbol
-        if (user.findUser(connection, email, password, "AdminStaff")) {
-            AdminStaff admin = new AdminStaff(email, password);
 
+        if (!user.findUser(connection, email, password, "adminstaff")) {
+            System.out.println("\n Login failed.");
+            return;
+        }
+
+        AdminStaff admin = new AdminStaff(email, password);
+        System.out.println("\nSuccessfully logged in!");
+
+        while (true) {
+            System.out.println("\n--- ADMIN STAFF MENU ---");
+            System.out.println("0. Logout");
+            System.out.println("1. Book Room for Classes");
+            System.out.println("2. Make Equipment Issues Report");
+            System.out.println("3. Setup a New Class");
+            System.out.print("Choice (e.g. 1): ");
+
+            // Get the user input
+            String choice = scanner.nextLine();
+
+            // Route the program to the choice the user selected
+            switch (choice) {
+                case "1":
+                    // Make room booking for class
+                    if (admin.bookRoomForClass(connection, scanner)) {
+                        System.out.println("Booking set successfully.");
+                    } else {
+                        System.out.println("Booking failed.");
+                    }
+                    // Show updated classes schedule
+                    System.out.println("\nHere's the updated class schedule: ");
+                    System.out.println(DatabaseHandler.getAll(connection, "groupfitnessclasses", new String[]{""}));
+                    break;
+
+                case "2":
+                    // Log new equipment issue
+                    admin.logEquipmentIssue(connection, scanner);
+                    // Display updated reports
+                    System.out.println("Here are the updated reports: ");
+                    System.out.println(DatabaseHandler.getAll(connection, "reports", new String[]{""}));
+                    // Display updated equipment status
+                    System.out.println("Here's the updated equipment statuses: ");
+                    System.out.println(DatabaseHandler.getAll(connection, "equipment", new String[]{""}));
+                    break;
+
+                case "3":
+                    if (admin.createClass(connection, scanner)) {
+                        System.out.println("Class added successfully");
+                        // Display new class schedule
+                        System.out.println("Here's an updated display of the Class Schedule: ");
+                        System.out.println(DatabaseHandler.getAll(connection, "groupfitnessclasses", new String[]{""}));
+                    }
+                    else {
+                        System.out.println("Failed to create new Class");
+                    }
+                    break;
+
+                case "0":
+                    // Log out
+                    System.out.println("\n Logging out...");
+                    return;
+
+                default:
+                    System.out.println("\n INVALID CHOICE! Please select a number from 0 to 3");
+            }
         }
     }
 }

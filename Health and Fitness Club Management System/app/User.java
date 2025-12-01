@@ -1,6 +1,7 @@
-import javax.xml.crypto.Data;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 public class User {
 
@@ -34,14 +35,25 @@ public class User {
     }
 
     // Method to register a new member
-    public boolean registerMember(Connection connection,
-                                  String email,
-                                  String firstName,
-                                  String lastName,
-                                  String password,
-                                  LocalDate birthDate,
-                                  String gender,
-                                  String phoneNumber) throws SQLException {
+    public boolean registerMember(Connection connection, Scanner scanner) throws SQLException {
+        // Prompt user for new account details
+        System.out.println("Please enter your credentials: ");
+        System.out.print("Email (e.g. fname.lname@email.com): ");
+        String email = scanner.nextLine();
+        System.out.print("First Name: ");
+        String firstName = scanner.nextLine();
+        System.out.print("Last Name: ");
+        String lastName = scanner.nextLine();
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+        System.out.print("Birth Date (e.g. YYYY-MM-DD): ");
+        String date = scanner.nextLine();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate birthDate = LocalDate.parse(date, format);
+        System.out.print("Gender (e.g. M): ");
+        String gender = scanner.nextLine();
+        System.out.print("Phone Number (e.g. XXX-XXX-XXXX): ");
+        String phoneNumber = scanner.nextLine();
 
         String sql = """
         INSERT INTO Members (email, first_name, last_name, password, birth_date, gender, phone_number)

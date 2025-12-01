@@ -235,8 +235,6 @@ public class Member extends User {
         VALUES (?, ?)
         """;
 
-        connection.setAutoCommit(false);
-
         try (PreparedStatement checkStmt = connection.prepareStatement(capacityCheck)) {
 
             checkStmt.setInt(1, classId);
@@ -274,9 +272,8 @@ public class Member extends User {
             return true;
 
         } catch (SQLException e) {
-            throw e;
-        } finally {
-            connection.setAutoCommit(true);
+            e.printStackTrace();
+            return false;
         }
     }
 
