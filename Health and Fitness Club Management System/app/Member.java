@@ -112,9 +112,10 @@ public class Member extends User {
         System.out.print("Body Fat (percentage): ");
         int bodyFatPct = scanner.nextInt();
         scanner.nextLine(); // Clear leftover symbols from buffer
+        Timestamp now = new Timestamp(System.currentTimeMillis());
 
         // Add health metric
-        boolean result = dbHandler_.addTuple(connection, "healthmetrics", new Object[]{email_, weight, height, heartRate, bodyFatPct});
+        boolean result = dbHandler_.addTuple(connection, "healthmetrics", new Object[]{email_, weight, height, heartRate, bodyFatPct, now});
 
         // Return early if no results found
         if (!result) {
@@ -159,31 +160,51 @@ public class Member extends User {
         }
     }
 
-    public List<Map<String, Object>> getHealthHistory(Connection connection) throws SQLException {
-        String sql = """
-        SELECT weight, height, heart_rate, body_fat_pct, created_at
-        FROM HealthMetrics
-        WHERE email = ?
-        ORDER BY created_at DESC
-        """;
-
-        List<Map<String, Object>> history = new ArrayList<>();
+    public boolean getHealthHistory(Connection connection) {
+        // Show updated health metrics of current member
+        System.out.println("\nDisplaying Health History: ");
+        String sql = "SELECT * FROM HealthMetrics WHERE email = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, email_);
 
+            // Grab query result
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Map<String, Object> row = new HashMap<>();
-                row.put("weight", rs.getInt("weight"));
-                row.put("height", rs.getInt("height"));
-                row.put("heart_rate", rs.getInt("heart_rate"));
-                row.put("body_fat_pct", rs.getInt("body_fat_pct"));
-                row.put("timestamp", rs.getTimestamp("created_at"));
-                history.add(row);
+            String out = "";
+
+            // Get the metadata and column count of a passed in query
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            // For each column, add the column name
+            for (int i = 1; i <= columnCount; i++) {
+                out += metaData.getColumnName(i);
+                if (i < columnCount) { out += " | "; }
             }
+            //System.out.println();
+            out += "\n";
+
+            while (rs.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    out += rs.getString(i);
+                    if (i < columnCount) { out += " | "; }
+                }
+                out += "\n";
+            }
+            rs.close();
+            stmt.close();
+            System.out.println(out);
+
+            return true;
         }
-        return history;
+        catch (SQLException e) {
+            System.out.println("Something went wrong when accessing table.");
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean registerForClass(Connection connection, String email, int classId) throws SQLException {

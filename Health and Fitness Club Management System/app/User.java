@@ -12,6 +12,10 @@ public class User {
         dbHandler_ = dbHandler;
     }
 
+    public void setEmail(String email) {
+        email_ = email;
+    }
+
     public boolean findUser(Connection connection, String email, String password, String table) throws SQLException {
         String[] emailVal = {email};
         String result = dbHandler_.getAll(connection, table, emailVal);

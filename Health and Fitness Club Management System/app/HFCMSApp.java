@@ -143,6 +143,7 @@ public class HFCMSApp {
                 case "1":
                     if (member.updateMemberProfile(connection, scanner)) {
                         System.out.println("Details changed successfully.");
+                        user.setEmail(member.getEmail());
                     } else {
                         System.out.println("Details couldn't be updated.");
                     }
@@ -167,17 +168,19 @@ public class HFCMSApp {
                         System.out.println("Health metric added successfully.");
                     }
                     else {
-                        System.out.println("Health Metric updated successfully.");
+                        System.out.println("Health Metric addition failed.");
                     }
                     break;
 
                 case "4":
                     // Display Health History
-                    member.getHealthHistory(connection);
+                    if (!member.getHealthHistory(connection)) {
+                        System.out.println("Failed to display health history.");
+                    }
                     break;
 
                 case "0":
-                    System.out.print("Logging out...");
+                    System.out.println("\n Logging out...");
                     return;
             }
         }

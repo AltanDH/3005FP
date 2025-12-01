@@ -120,6 +120,7 @@ public class DatabaseHandler {
         catch (Exception exception) {
             System.out.println(query);
             System.out.println("\nError! Invalid data entered");
+            exception.printStackTrace();
             return false;
         }
     }
