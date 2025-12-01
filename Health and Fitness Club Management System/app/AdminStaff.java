@@ -4,8 +4,7 @@ import java.time.LocalTime;
 
 public class AdminStaff extends User {
 
-    public AdminStaff(String email, String password, DatabaseHandler dbHand) {
-        super(dbHand);
+    public AdminStaff(String email, String password) {
         email_ = email;
         password_ = password;
     }

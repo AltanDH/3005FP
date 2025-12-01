@@ -8,8 +8,7 @@ import java.util.Map;
 
 public class Trainer extends User {
 
-    public Trainer(String email, String password, DatabaseHandler dbHand) {
-        super(dbHand);
+    public Trainer(String email, String password) {
         email_ = email;
         password_ = password;
     }

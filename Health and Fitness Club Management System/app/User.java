@@ -1,3 +1,4 @@
+import javax.xml.crypto.Data;
 import java.sql.*;
 import java.time.LocalDate;
 
@@ -5,20 +6,21 @@ public class User {
 
     protected String email_;
     protected String password_;
-    protected DatabaseHandler dbHandler_;
 
-    // Getter for user role
-    public User(DatabaseHandler dbHandler) {
-        dbHandler_ = dbHandler;
+    // Getters
+    public String getEmail() {
+        return email_;
     }
 
+    // Setters
     public void setEmail(String email) {
         email_ = email;
     }
 
+    // Method to authenticate user login
     public boolean findUser(Connection connection, String email, String password, String table) throws SQLException {
         String[] emailVal = {email};
-        String result = dbHandler_.getAll(connection, table, emailVal);
+        String result = DatabaseHandler.getAll(connection, table, emailVal);
         String [] records = result.split("\\n");
 
         if (records.length <= 1) {

@@ -6,21 +6,17 @@ import java.util.Scanner;
 
 public class HFCMSApp {
 
-    private static DatabaseHandler dbHandler;
     private static Connection connection;
 
     // Main function which runs the program's loop
     public static void main(String[] args) {
 
-        // Create a database handler
-        dbHandler = new DatabaseHandler();
-
         // Try to connect to the server and if so, run the main loop
         try {
             connection = DriverManager.getConnection(
-                    dbHandler.getURL(),
-                    dbHandler.getUser(),
-                    dbHandler.getPassword()
+                    DatabaseHandler.getURL(),
+                    DatabaseHandler.getUser(),
+                    DatabaseHandler.getPassword()
             );
 
             System.out.println("Database connection successful.");
@@ -30,7 +26,7 @@ public class HFCMSApp {
 
             // REPL for Login (will also act as main REPL)
             // Asks the user who they're logging in as, or if they'd like to create a new account
-            User user = new User(dbHandler);
+            User user = new User();
             while (true) {
                 // Ask the user who they're logging in as
                 System.out.println("\n--- LOGIN PORTAL ---");
@@ -85,7 +81,7 @@ public class HFCMSApp {
 
                         // Show updated Members table for Testing purposes
                         System.out.println("Here are the updated Members accounts for testing purposes:");
-                        System.out.println(dbHandler.getAll(connection, "members", new String[]{}));
+                        System.out.println(DatabaseHandler.getAll(connection, "members", new String[]{}));
                         break;
 
                     case "0": // Exit the program
@@ -107,23 +103,23 @@ public class HFCMSApp {
     private static void memberREPL(Scanner scanner, User user) throws SQLException {
         // For testing purposes, display existing accounts
         System.out.println("\nFor Testing Purposes, here are the existing Members: ");
-        String allMembers = dbHandler.getAll(connection, "members", new String[]{""});
+        String allMembers = DatabaseHandler.getAll(connection, "members", new String[]{""});
         System.out.println(allMembers);
 
         // Logging in as Member
-        System.out.println("\nPlease enter your credentials: ");
+        System.out.println("Please enter your credentials: ");
         System.out.print("Email (e.g. fname.lname@email.com): ");
         String email = scanner.nextLine();
         System.out.print("Password: ");
         String password = scanner.nextLine();
 
         if (!user.findUser(connection, email, password, "members")) {
-            System.out.println("User not found.");
+            System.out.println("\n Login failed.");
             return;
         }
 
-        Member member = new Member(email, password, dbHandler);
-        System.out.println("Successfully logged in!");
+        Member member = new Member(email, password);
+        System.out.println("\nSuccessfully logged in!");
 
         while (true) {
             System.out.println("\n--- MEMBER MENU ---");
@@ -149,7 +145,7 @@ public class HFCMSApp {
                     }
                     // Show updated member profile
                     System.out.println("\nHere's your updated member profile: ");
-                    System.out.println(dbHandler.getAll(connection, "members", new String[]{member.getEmail()}));
+                    System.out.println(DatabaseHandler.getAll(connection, "members", new String[]{member.getEmail()}));
                     break;
 
                 case "2":
@@ -179,9 +175,18 @@ public class HFCMSApp {
                     }
                     break;
 
+                case "5":
+                    if (!member.registerForClass(connection, scanner)) {
+                        System.out.println("Class registration failed.");
+                    }
+                    break;
+
                 case "0":
                     System.out.println("\n Logging out...");
                     return;
+
+                default:
+                    System.out.println("\n INVALID CHOICE! Please select a number from 0 to 5");
             }
         }
     }
@@ -219,7 +224,7 @@ public class HFCMSApp {
         String password = scanner.nextLine();
         // Eliminate next line symbol
         if (user.findUser(connection, email, password, "AdminStaff")) {
-            AdminStaff admin = new AdminStaff(email, password, dbHandler);
+            AdminStaff admin = new AdminStaff(email, password);
 
         }
     }

@@ -3,14 +3,9 @@ import java.util.*;
 
 public class Member extends User {
 
-    public Member(String email, String password, DatabaseHandler dbHand) {
-        super(dbHand);
+    public Member(String email, String password) {
         email_ = email;
         password_ = password;
-    }
-
-    public String getEmail() {
-        return email_;
     }
 
     public boolean updateMemberProfile(Connection connection, Scanner scanner) throws SQLException {
@@ -51,7 +46,7 @@ public class Member extends User {
         int value = scanner.nextInt();
         scanner.nextLine(); // Clear leftover symbols from buffer
 
-        boolean result = dbHandler_.addTuple(connection, "fitnessgoals", new Object[]{email_, type, value});
+        boolean result = DatabaseHandler.addTuple(connection, "fitnessgoals", new Object[]{email_, type, value});
 
         // Return early if no results found
         if (!result) {
@@ -115,7 +110,7 @@ public class Member extends User {
         Timestamp now = new Timestamp(System.currentTimeMillis());
 
         // Add health metric
-        boolean result = dbHandler_.addTuple(connection, "healthmetrics", new Object[]{email_, weight, height, heartRate, bodyFatPct, now});
+        boolean result = DatabaseHandler.addTuple(connection, "healthmetrics", new Object[]{email_, weight, height, heartRate, bodyFatPct, now});
 
         // Return early if no results found
         if (!result) {
@@ -207,8 +202,26 @@ public class Member extends User {
         }
     }
 
-    public boolean registerForClass(Connection connection, String email, int classId) throws SQLException {
+    public boolean registerForClass(Connection connection, Scanner scanner) throws SQLException {
+        // Display classes already registered for
+        System.out.println("\nHere's a summary of the classes you've registered for: ");
+        displayClassSchedule(connection);
 
+        // Display Current Class Options
+        System.out.println("And here's a list of the currently available classes: ");
+        System.out.println(DatabaseHandler.getAll(connection, "groupfitnessclasses", new String[]{""}));
+
+        // Prompt user for desired class Id to join group
+        System.out.print("Please enter the ID of the class you'd like to join (-1 to cancel): ");
+        int classId = scanner.nextInt();
+        scanner.nextLine(); // Clear leftover symbols from buffer
+
+        if (classId == -1) {
+            System.out.println("Class registration cancelled.");
+            return true;
+        }
+
+        // Check Capacity
         String capacityCheck = """
         SELECT capacity,
                (SELECT COUNT(*) FROM Participates WHERE class_id = ?) AS enrolled
@@ -216,6 +229,7 @@ public class Member extends User {
         WHERE class_id = ?
         """;
 
+        // Add Student into proper relationship
         String insert = """
         INSERT INTO Participates (email, class_id)
         VALUES (?, ?)
@@ -231,34 +245,83 @@ public class Member extends User {
             ResultSet rs = checkStmt.executeQuery();
 
             if (!rs.next()) {
-                connection.rollback();
-                throw new SQLException("Class does not exist.");
+                System.out.println("Class does not exist.");
+                return false;
             }
 
             int capacity = rs.getInt("capacity");
             int enrolled = rs.getInt("enrolled");
 
             if (enrolled >= capacity) {
-                connection.rollback();
                 System.out.println("Class is full.");
                 return false;
             }
 
             try (PreparedStatement insertStmt = connection.prepareStatement(insert)) {
-                insertStmt.setString(1, email);
+                insertStmt.setString(1, email_);
                 insertStmt.setInt(2, classId);
 
                 insertStmt.executeUpdate();
             }
 
             connection.commit();
+            System.out.println("Class registration complete.");
+
+            // Display classes already registered for
+            System.out.println("\nHere's your updated schedule: ");
+            displayClassSchedule(connection);
+
             return true;
 
         } catch (SQLException e) {
-            connection.rollback();
             throw e;
         } finally {
             connection.setAutoCommit(true);
+        }
+    }
+
+    public void displayClassSchedule(Connection connection) {
+        String sql = """
+                SELECT p.email, c.* FROM Participates p
+                JOIN GroupFitnessClasses c ON p.class_id = c.class_id
+                WHERE p.email = ?;
+                """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, email_);
+
+            // Grab query result
+            ResultSet rs = stmt.executeQuery();
+            String out = "";
+
+            // Get the metadata and column count of a passed in query
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            // For each column, add the column name
+            for (int i = 1; i <= columnCount; i++) {
+                out += metaData.getColumnName(i);
+                if (i < columnCount) { out += " | "; }
+            }
+            //System.out.println();
+            out += "\n";
+
+            while (rs.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    out += rs.getString(i);
+                    if (i < columnCount) { out += " | "; }
+                }
+                out += "\n";
+            }
+            rs.close();
+            stmt.close();
+            System.out.println(out);
+        }
+        catch (SQLException e) {
+            System.out.println("Something went wrong when accessing table.");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
