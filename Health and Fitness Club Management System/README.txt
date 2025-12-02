@@ -29,7 +29,7 @@ Steps to Run:
 10. Run the HFCMSApp.java file
 
 Video Link: 
-- 
+- https://youtu.be/Tme6_dTv1I8
 
 Assumptions:
 - It's possible for group fitness classes to have multiple trainers teaching it
@@ -89,6 +89,7 @@ DML.sql:
 pom.xml:
 - File which uses Maven to help setup JDBC
 - Specifies project dependencies which Maven automatically downloads
+
 
 
 
