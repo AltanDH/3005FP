@@ -31,6 +31,9 @@ Steps to Run:
 Video Link: 
 - https://youtu.be/Tme6_dTv1I8
 
+Github Link:
+- https://github.com/AltanDH/3005FP
+
 Assumptions:
 - It's possible for group fitness classes to have multiple trainers teaching it.
 - A member can have multiple fitness goals.
@@ -89,4 +92,5 @@ app/pom.xml:
 - Specifies project dependencies which Maven automatically downloads.
 
 app/*.java:
+
 - Source code managing main application logic (further explained in video presentation).
