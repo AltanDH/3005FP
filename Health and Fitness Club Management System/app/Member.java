@@ -20,31 +20,49 @@ public class Member extends User {
         System.out.print("New Phone Number (e.g. XXX-XXX-XXXX): ");
         String phoneNumber = scanner.nextLine();
 
-        String sql = """
+        String update = """
         UPDATE Members
-        SET first_name = ?, last_name = ?, phone_number = ?
+        SET email = ?, first_name = ?, last_name = ?, phone_number = ?
         WHERE email = ?
         """;
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, firstName);
-            stmt.setString(2, lastName);
-            stmt.setString(3, phoneNumber);
-            stmt.setString(4, email);
+        try (PreparedStatement stmt = connection.prepareStatement(update)) {
+            stmt.setString(1, email);
+            stmt.setString(2, firstName);
+            stmt.setString(3, lastName);
+            stmt.setString(4, phoneNumber);
+            stmt.setString(5, email_);
 
-            email_ = email;
-            return stmt.executeUpdate() > 0;
+            System.out.println(stmt);
+            if (stmt.executeUpdate() > 0) {
+                email_ = email;
+                return true;
+            }
+            return false;
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return false;
         }
     }
 
     public boolean setFitnessGoal(Connection connection, Scanner scanner) throws SQLException {
         // Prompt for fitness goal details
-        System.out.println("Please enter your goal parameters: ");
-        System.out.print("Goal Type (weight/bodyfat): ");
-        String type = scanner.nextLine();
-        System.out.print("Target Value (kg/percent): ");
-        int value = scanner.nextInt();
-        scanner.nextLine(); // Clear leftover symbols from buffer
+        String type;
+        int value;
+        try {
+            System.out.println("Please enter your goal parameters: ");
+            System.out.print("Goal Type (weight/bodyfat): ");
+            type = scanner.nextLine();
+            System.out.print("Target Value (kg/percent): ");
+            value = scanner.nextInt();
+            scanner.nextLine(); // Clear leftover symbols from buffer
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            System.out.println("\nPlease input proper values.");
+            return false;
+        }
 
         boolean result = DatabaseHandler.addTuple(connection, "fitnessgoals", new Object[]{email_, type, value});
 
@@ -61,6 +79,7 @@ public class Member extends User {
             stmt.setString(1, email_);
 
             // Grab query result
+            System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
             String out = "";
 
@@ -83,33 +102,46 @@ public class Member extends User {
                 }
                 out += "\n";
             }
+
             rs.close();
             stmt.close();
             System.out.println(out);
 
             return true;
         }
+        catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
     }
 
     public boolean logHealthMetric(Connection connection, Scanner scanner) throws SQLException {
 
         // Prompt for fitness goal details
-        System.out.println("Please enter your health parameters: ");
-        System.out.print("Weight (kg): ");
-        int weight = scanner.nextInt();
-        scanner.nextLine(); // Clear leftover symbols from buffer
-        System.out.print("Height (cm): ");
-        int height = scanner.nextInt();
-        scanner.nextLine(); // Clear leftover symbols from buffer
-        System.out.print("Heart Rate (bpm): ");
-        int heartRate = scanner.nextInt();
-        scanner.nextLine(); // Clear leftover symbols from buffer
-        System.out.print("Body Fat (percentage): ");
-        int bodyFatPct = scanner.nextInt();
-        scanner.nextLine(); // Clear leftover symbols from buffer
-        Timestamp now = new Timestamp(System.currentTimeMillis());
+        int weight, height, heartRate, bodyFatPct;
+        try {
+            System.out.println("Please enter your health parameters: ");
+            System.out.print("Weight (kg): ");
+            weight = scanner.nextInt();
+            scanner.nextLine(); // Clear leftover symbols from buffer
+            System.out.print("Height (cm): ");
+            height = scanner.nextInt();
+            scanner.nextLine(); // Clear leftover symbols from buffer
+            System.out.print("Heart Rate (bpm): ");
+            heartRate = scanner.nextInt();
+            scanner.nextLine(); // Clear leftover symbols from buffer
+            System.out.print("Body Fat (percentage): ");
+            bodyFatPct = scanner.nextInt();
+            scanner.nextLine(); // Clear leftover symbols from buffer
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            System.out.println("\nPlease input proper values.");
+            return false;
+        }
 
         // Add health metric
+        Timestamp now = new Timestamp(System.currentTimeMillis());
         boolean result = DatabaseHandler.addTuple(connection, "healthmetrics", new Object[]{email_, weight, height, heartRate, bodyFatPct, now});
 
         // Return early if no results found
@@ -118,13 +150,14 @@ public class Member extends User {
         }
 
         // Show updated health metrics of current member
-        System.out.println("\nHere's your updated fitness goals: ");
+        System.out.println("\nHere's your updated health metrics: ");
         String sql = "SELECT * FROM HealthMetrics WHERE email = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, email_);
 
             // Grab query result
+            System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
             String out = "";
 
@@ -152,6 +185,10 @@ public class Member extends User {
             System.out.println(out);
 
             return true;
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+            return false;
         }
     }
 
@@ -164,6 +201,7 @@ public class Member extends User {
             stmt.setString(1, email_);
 
             // Grab query result
+            System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
             String out = "";
 
@@ -239,7 +277,7 @@ public class Member extends User {
 
             checkStmt.setInt(1, classId);
             checkStmt.setInt(2, classId);
-
+            System.out.println(checkStmt);
             ResultSet rs = checkStmt.executeQuery();
 
             if (!rs.next()) {
@@ -259,10 +297,10 @@ public class Member extends User {
                 insertStmt.setString(1, email_);
                 insertStmt.setInt(2, classId);
 
+                System.out.println(insertStmt);
                 insertStmt.executeUpdate();
             }
 
-            connection.commit();
             System.out.println("Class registration complete.");
 
             // Display classes already registered for
@@ -270,9 +308,9 @@ public class Member extends User {
             displayClassSchedule(connection);
 
             return true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }
+        catch (SQLException e) {
+            System.out.println(e);
             return false;
         }
     }
@@ -288,6 +326,7 @@ public class Member extends User {
             stmt.setString(1, email_);
 
             // Grab query result
+            System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
             String out = "";
 

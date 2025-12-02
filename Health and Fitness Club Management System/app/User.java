@@ -69,12 +69,13 @@ public class User {
             stmt.setString(6, gender);
             stmt.setString(7, phoneNumber);
 
+            System.out.println(stmt);
             stmt.executeUpdate();
             System.out.println("Registration Successful!");
             return true;
 
-        } catch (SQLIntegrityConstraintViolationException e) {
-            System.out.println("Registration failed: Email already exists.");
+        } catch (SQLException e) {
+            System.out.println("Registration failed.");
             return false;
         }
     }

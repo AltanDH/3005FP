@@ -36,6 +36,8 @@ public class Trainer extends User {
             stmt.setTime(3, Time.valueOf(start));
             stmt.setTime(4, Time.valueOf(end));
             stmt.setBoolean(5, recurringWeekly);
+
+            System.out.println(stmt);
             stmt.executeUpdate();
 
             // Show updated availability periods
@@ -62,6 +64,7 @@ public class Trainer extends User {
             stmt.setString(1, email_);
 
             // Grab query result
+            System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
             String out = "";
 
@@ -106,6 +109,7 @@ public class Trainer extends User {
             stmt.setString(1, email_);
 
             // Grab query result
+            System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
             String out = "";
 
@@ -157,6 +161,7 @@ public class Trainer extends User {
             stmt.setString(3, last_name);
 
             // Grab query result
+            System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
             String out = "";
 
@@ -201,6 +206,7 @@ public class Trainer extends User {
             stmt.setString(1, email_);
 
             // Grab query result
+            System.out.println(stmt);
             ResultSet rs = stmt.executeQuery();
             String out = "";
 

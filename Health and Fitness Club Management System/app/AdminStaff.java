@@ -50,10 +50,11 @@ public class AdminStaff extends User {
 
         try (PreparedStatement check = connection.prepareStatement(overlapCheck)) {
             check.setInt(1, roomId);
-            check.setTime(2, Time.valueOf(endTime));
-            check.setTime(3, Time.valueOf(startTime));
+            check.setTime(2, Time.valueOf(startTime));
+            check.setTime(3, Time.valueOf(endTime));
             check.setInt(4, classId);
 
+            System.out.println(check);
             ResultSet rs = check.executeQuery();
             if (rs.next()) {
                 System.out.println("Room is already booked for that time.");
@@ -66,12 +67,14 @@ public class AdminStaff extends User {
             stmt.setTime(2, Time.valueOf(startTime));
             stmt.setInt(3, duration);
             stmt.setInt(4, classId);
+
+            System.out.println(stmt);
             stmt.executeUpdate();
             return true;
         }
     }
 
-    public boolean logEquipmentIssue(Connection connection, Scanner scanner) throws SQLException {
+    public boolean updateEquipmentIssue(Connection connection, Scanner scanner) throws SQLException {
 
         // Display current equipemnt
         System.out.println("\nHere's the current equipment: ");
@@ -107,18 +110,26 @@ public class AdminStaff extends User {
             rep.setInt(2, equipmentId);
             rep.setString(3, operationalStatus);
             rep.setString(4, issueType);
+
+            System.out.println(rep);
             rep.executeUpdate();
 
             upd.setString(1, operationalStatus);
             upd.setString(2, issueType);
             upd.setString(3, issueDesc);
             upd.setInt(4, equipmentId);
+
+            System.out.println(upd);
             upd.executeUpdate();
 
             return true;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e);
+            return false;
+        }
+        catch (Exception e) {
+            System.out.print(e);
             return false;
         }
     }
@@ -160,9 +171,10 @@ public class AdminStaff extends User {
         """;
         try (PreparedStatement check = connection.prepareStatement(overlapCheck)) {
             check.setInt(1, roomId);
-            check.setTime(2, Time.valueOf(endTime));
-            check.setTime(3, Time.valueOf(startTime));
+            check.setTime(2, Time.valueOf(startTime));
+            check.setTime(3, Time.valueOf(endTime));
 
+            System.out.println(check);
             ResultSet rs = check.executeQuery();
             if (rs.next()) {
                 System.out.println("Room is already booked for that time.");
@@ -198,6 +210,7 @@ public class AdminStaff extends User {
             cls.setTime(5, Time.valueOf(startTime));
             cls.setBoolean(6, recurringWeekly);
 
+            System.out.println(cls);
             ResultSet rs = cls.executeQuery();
             if (!rs.next()) throw new SQLException("Failed to create class.");
 
@@ -205,12 +218,14 @@ public class AdminStaff extends User {
 
             teach.setString(1, trainerEmail);
             teach.setInt(2, classId);
-            teach.executeUpdate();
 
+            System.out.println(teach);
+            teach.executeUpdate();
             return true;
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }
+        catch (Exception e) {
+            System.out.println(e);
             return false;
         }
     }

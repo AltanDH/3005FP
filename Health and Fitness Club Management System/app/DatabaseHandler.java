@@ -39,8 +39,6 @@ public class DatabaseHandler {
         // Output string
         String out = "";
 
-        //System.out.println(query);
-
         try {
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -54,6 +52,8 @@ public class DatabaseHandler {
 
             // Grab the result of a query
             ResultSet result = statement.executeQuery();
+
+            System.out.println(statement);
 
             // Get the metadata and column count of a passed in query
             ResultSetMetaData metaData = result.getMetaData();

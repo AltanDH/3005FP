@@ -63,7 +63,7 @@ public class HFCMSApp {
 
                         // Show updated Members table for Testing purposes
                         System.out.println("Here are the updated Members accounts for testing purposes:");
-                        System.out.println(DatabaseHandler.getAll(connection, "members", new String[]{}));
+                        System.out.println(DatabaseHandler.getAll(connection, "members", new String[]{""}));
                         break;
 
                     case "0": // Exit the program
@@ -122,12 +122,12 @@ public class HFCMSApp {
                     if (member.updateMemberProfile(connection, scanner)) {
                         System.out.println("Details changed successfully.");
                         user.setEmail(member.getEmail());
+                        // Show updated member profile
+                        System.out.println("\nHere's your updated member profile: ");
+                        System.out.println(DatabaseHandler.getAll(connection, "members", new String[]{member.getEmail()}));
                     } else {
                         System.out.println("Details couldn't be updated.");
                     }
-                    // Show updated member profile
-                    System.out.println("\nHere's your updated member profile: ");
-                    System.out.println(DatabaseHandler.getAll(connection, "members", new String[]{member.getEmail()}));
                     break;
 
                 case "2":
@@ -270,7 +270,7 @@ public class HFCMSApp {
             System.out.println("\n--- ADMIN STAFF MENU ---");
             System.out.println("0. Logout");
             System.out.println("1. Book Room for Classes");
-            System.out.println("2. Make Equipment Issues Report");
+            System.out.println("2. Update Equipment Issues Report");
             System.out.println("3. Setup a New Class");
             System.out.print("Choice (e.g. 1): ");
 
@@ -293,7 +293,7 @@ public class HFCMSApp {
 
                 case "2":
                     // Log new equipment issue
-                    admin.logEquipmentIssue(connection, scanner);
+                    admin.updateEquipmentIssue(connection, scanner);
                     // Display updated reports
                     System.out.println("Here are the updated reports: ");
                     System.out.println(DatabaseHandler.getAll(connection, "reports", new String[]{""}));
